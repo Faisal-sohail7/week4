@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloud Services Week 4</title>
+</head>
+
+<body>
+
+    <h1>Cloud Services Week 4</h1>
+
+    <h2>Three-Container Application</h2>
+
+    <p>
+        This application consists of an Nginx frontend,
+        a Python backend REST API and a MySQL database.
+    </p>
+
+    <h2>Application Status</h2>
+
+    <p>Database time: <span id="dbtime">Loading...</span></p>
+    <p>Visits: <span id="visits">Loading...</span></p>
+
+    <button onclick="addVisit()">Add Visit</button>
+
+    <p id="error"></p>
+
+    <script>
+        function loadStatus() {
+            fetch('/api/status')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('dbtime').textContent =
+                        data.database_time;
+
+                    document.getElementById('visits').textContent =
+                        data.visits;
+
+                    document.getElementById('error').textContent = '';
+                })
+                .catch(error => {
+                    document.getElementById('error').textContent =
+                        'API error: ' + error;
+                });
+        }
+
+        function addVisit() {
+            fetch('/api/visit')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('visits').textContent =
+                        data.visits;
+
+                    document.getElementById('error').textContent = '';
+                })
+                .catch(error => {
+                    document.getElementById('error').textContent =
+                        'API error: ' + error;
+                });
+        }
+
+        loadStatus();
+    </script>
+
+</body>
+</html>
