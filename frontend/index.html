@@ -1,7 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Services Week 4</title>
 </head>
 
@@ -9,64 +10,237 @@
 
     <h1>Cloud Services Week 4</h1>
 
+    <p><strong>Name:</strong> Faisal Sohail</p>
+
     <h2>Three-Container Application</h2>
 
     <p>
-        This application consists of an Nginx frontend,
-        a Python backend REST API and a MySQL database.
+        This application consists of an Nginx frontend, a Python backend REST API
+        and a MySQL database. The application is deployed in Rahti using Kubernetes
+        resources.
     </p>
+
 
     <h2>Application Status</h2>
 
-    <p>Database time: <span id="dbtime">Loading...</span></p>
+    <p>Database time: <span id="db-time">Loading...</span></p>
     <p>Visits: <span id="visits">Loading...</span></p>
 
     <button onclick="addVisit()">Add Visit</button>
 
     <p id="error"></p>
 
+
+    <hr>
+
+
+    <h2>1. Frontend, Backend and Database Communication</h2>
+
+    <p>
+        The frontend communicates with the Python backend through the REST API.
+        The backend communicates with the MySQL database. The database time and
+        visit counter shown on the application demonstrate that communication
+        between the frontend, backend and database is working.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215353.png"
+        alt="Working application showing database time and visits"
+        width="900"
+    >
+
+
+    <h2>2. Running Pods</h2>
+
+    <p>
+        The application components are running in Rahti. The backend, database
+        and frontend application Pods are running successfully.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215402.png"
+        alt="Running Pods in Rahti"
+        width="900"
+    >
+
+
+    <h2>3. Database Persistence</h2>
+
+    <p>
+        I tested database persistence by checking the visit counter before
+        recreating a Pod. The application had 6 visits stored in the database.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215417.png"
+        alt="Visit counter before Pod recreation"
+        width="900"
+    >
+
+    <p>
+        After the Pod was recreated, the application still showed 6 visits.
+        This demonstrates that the application data was not lost when the Pod
+        was recreated and that persistent storage works.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215440.png"
+        alt="Visit counter after Pod recreation"
+        width="900"
+    >
+
+
+    <h2>4. Pod Recovery</h2>
+
+    <p>
+        I tested Pod recovery by deleting a running Pod in Rahti. Kubernetes
+        automatically created a replacement Pod. The new Pod reached the
+        Running state, showing that the Deployment maintains the required
+        number of replicas automatically.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215433.png"
+        alt="New Pod automatically created by Kubernetes"
+        width="900"
+    >
+
+
+    <h2>5. Scaling Experiment</h2>
+
+    <p>
+        I tested application scaling by increasing the backend Deployment from
+        one replica to two replicas. Rahti created another backend Pod and both
+        backend Pods reached the Running state. This demonstrates how Kubernetes
+        can scale an application by running multiple replicas.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215518.png"
+        alt="Two backend Pods running after scaling"
+        width="900"
+    >
+
+
+    <h2>6. Application Update</h2>
+
+    <p>
+        The application source code is stored in Git and connected to Rahti.
+        After changes were pushed to the repository, the application was rebuilt
+        and deployed again. Kubernetes used a new Pod for the updated
+        application while the Deployment continued to manage the application.
+        This demonstrates the application update and rollout process.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215600.png"
+        alt="Application update and deployment evidence"
+        width="900"
+    >
+
+
+    <h2>7. Problems and Solutions</h2>
+
+    <p>
+        One of the main problems was communication between the frontend and the
+        backend. The frontend initially returned an HTTP 404 API error. I checked
+        the frontend request and Nginx configuration and corrected the proxy
+        configuration so that API requests were forwarded to the backend
+        service correctly.
+    </p>
+
+    <p>
+        I also had to make sure that the backend, database and frontend services
+        were running correctly and that their Kubernetes Services and
+        Deployments were connected using the correct names and ports. After
+        correcting the configuration, the database time and visit counter
+        worked correctly.
+    </p>
+
+
+    <h2>8. Rahti Compared with Docker Compose and cPouta</h2>
+
+    <p>
+        In the previous Docker Compose and cPouta deployment, containers were
+        managed mainly through Docker Compose on a virtual machine. In Rahti,
+        Kubernetes resources such as Deployments, Services, ConfigMaps and
+        persistent storage are used to deploy and manage the application.
+    </p>
+
+    <p>
+        Rahti also provides automatic Pod recovery and easy scaling. When a Pod
+        is deleted, Kubernetes can create a replacement automatically. The
+        number of application replicas can also be changed without manually
+        starting separate containers. Networking is handled through Kubernetes
+        Services, while a Route provides public access to the application.
+    </p>
+
+
+    <h2>9. Screenshot Storage</h2>
+
+    <p>
+        The screenshots used as evidence in this documentation are stored in
+        CSC Allas object storage. The bucket has public access so that the
+        screenshots can be displayed directly on this webpage.
+    </p>
+
+    <img
+        src="https://a3s.fi/swift/v1/cloud%20service/cfb9145f-4883-46d1-abc0-e6ac13be6736.png"
+        alt="Screenshots uploaded to CSC Allas"
+        width="900"
+    >
+
+
+    <h2>10. Git Repository</h2>
+
+    <p>
+        The application and the necessary Kubernetes deployment configuration
+        are stored in GitHub.
+    </p>
+
+    <p>
+        GitHub repository:
+        <a href="https://github.com/Faisal-sohail7/week4" target="_blank">
+            https://github.com/Faisal-sohail7/week4
+        </a>
+    </p>
+
+
     <script>
-        function loadStatus() {
-            fetch('/api/status')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('HTTP ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById('dbtime').textContent =
-                        data.database_time;
+        async function loadStatus() {
+            try {
+                const response = await fetch("/api/status");
 
-                    document.getElementById('visits').textContent =
-                        data.visits;
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status);
+                }
 
-                    document.getElementById('error').textContent = '';
-                })
-                .catch(error => {
-                    document.getElementById('error').textContent =
-                        'API error: ' + error;
-                });
+                const data = await response.json();
+
+                document.getElementById("db-time").textContent = data.db_time;
+                document.getElementById("visits").textContent = data.visits;
+                document.getElementById("error").textContent = "";
+            } catch (error) {
+                document.getElementById("error").textContent =
+                    "API error: " + error;
+            }
         }
 
-        function addVisit() {
-            fetch('/api/visit')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('HTTP ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById('visits').textContent =
-                        data.visits;
-
-                    document.getElementById('error').textContent = '';
-                })
-                .catch(error => {
-                    document.getElementById('error').textContent =
-                        'API error: ' + error;
+        async function addVisit() {
+            try {
+                const response = await fetch("/api/visit", {
+                    method: "POST"
                 });
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status);
+                }
+
+                await loadStatus();
+            } catch (error) {
+                document.getElementById("error").textContent =
+                    "API error: " + error;
+            }
         }
 
         loadStatus();
