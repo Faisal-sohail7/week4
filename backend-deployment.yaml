@@ -17,6 +17,7 @@ spec:
           image: vikke82/lemp-backend:1.0.2
           ports:
             - containerPort: 8000
+
           env:
             - name: DB_HOST
               valueFrom:
@@ -41,3 +42,9 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: DB_PASSWORD
+
+            - name: REDIS_HOST
+              value: "redis"
+
+            - name: REDIS_APP_PORT
+              value: "6379"
