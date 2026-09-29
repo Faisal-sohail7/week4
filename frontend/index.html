@@ -1,250 +1,647 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Services Week 4</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cloud Services Week 5 - Faisal Sohail</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 25px;
+      line-height: 1.6;
+      color: #222;
+    }
+
+    h1 {
+      border-bottom: 3px solid #333;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 45px;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    .info {
+      background: #f3f3f3;
+      padding: 15px;
+      border-left: 5px solid #555;
+      margin: 20px 0;
+    }
+
+    .architecture {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .box {
+      display: inline-block;
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 12px 25px;
+      margin: 5px;
+      background: #f5f5f5;
+      min-width: 180px;
+    }
+
+    .arrow {
+      font-size: 26px;
+      margin: 3px;
+    }
+
+    .branch {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .branch-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    figure {
+      margin: 30px 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #aaa;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    .success {
+      background: #eef7ee;
+      border-left: 5px solid #4c8c4a;
+      padding: 15px;
+      margin: 20px 0;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 2px solid #ddd;
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>Cloud Services Week 4</h1>
+  <h1>Cloud Services - Week 5</h1>
 
-    <p><strong>Name:</strong> Faisal Sohail</p>
-
-    <h2>Three-Container Application</h2>
-
-    <p>
-        This application consists of an Nginx frontend, a Python backend REST API
-        and a MySQL database. The application is deployed in Rahti using Kubernetes
-        resources.
-    </p>
+  <div class="info">
+    <strong>Name:</strong> Faisal Sohail<br>
+    <strong>Platform:</strong> CSC Rahti / OpenShift<br>
+    <strong>Extension selected:</strong> Option 2 - Redis Cache
+  </div>
 
 
-    <h2>Application Status</h2>
+  <!-- ====================================================== -->
+  <!-- PART A -->
+  <!-- ====================================================== -->
 
-    <p>Database time: <span id="db-time">Loading...</span></p>
-    <p>Visits: <span id="visits">Loading...</span></p>
-
-    <button onclick="addVisit()">Add Visit</button>
-
-    <p id="error"></p>
+  <h2>Part A - Questions</h2>
 
 
-    <hr>
+  <h3>1. What is the difference between SAML and OAuth?</h3>
+
+  <p>
+    SAML (Security Assertion Markup Language) and OAuth are both used in
+    identity and access management, but they solve different problems.
+    SAML is mainly used for authentication and Single Sign-On (SSO).
+    It allows a user to authenticate with an identity provider and then
+    access another service without signing in again.
+  </p>
+
+  <p>
+    For example, a company could use SAML so that employees can use one
+    company account to access several internal web applications. SAML
+    commonly exchanges authentication information using XML-based
+    assertions between an identity provider and a service provider.
+  </p>
+
+  <p>
+    OAuth, on the other hand, is mainly an authorization framework.
+    It allows an application to receive limited access to another
+    service without requiring the user to give the application their
+    password. For example, an application could receive permission to
+    access selected information from another service using an access
+    token.
+  </p>
+
+  <p>
+    A company may therefore choose SAML when it needs enterprise SSO and
+    centralized authentication. OAuth is more appropriate when an
+    application needs permission to access another service or API on
+    behalf of a user. OAuth can also be combined with OpenID Connect
+    when authentication information is required.
+  </p>
 
 
-    <h2>1. Frontend, Backend and Database Communication</h2>
+  <h3>2. What is a Web Application Firewall (WAF)?</h3>
 
-    <p>
-        The frontend communicates with the Python backend through the REST API.
-        The backend communicates with the MySQL database. The database time and
-        visit counter shown on the application demonstrate that communication
-        between the frontend, backend and database is working.
-    </p>
+  <p>
+    A Web Application Firewall is a security system that monitors and
+    filters HTTP and HTTPS traffic going to a web application. Unlike
+    a traditional network firewall that mainly works with addresses,
+    ports and protocols, a WAF can inspect web requests at the
+    application layer.
+  </p>
 
+  <p>
+    A WAF can help defend a web application against attacks such as
+    SQL injection, cross-site scripting (XSS), malicious HTTP requests
+    and some automated attacks. Rules can be used to block suspicious
+    requests before they reach the application.
+  </p>
+
+  <p>
+    In my Rahti architecture, a WAF would ideally be placed before the
+    public frontend, between Internet users and the Route. This means
+    malicious traffic could be filtered before it reaches the Nginx
+    frontend or Flask backend.
+  </p>
+
+  <p>
+    The flow could therefore be:
+    <strong>Internet → WAF → Route → Nginx frontend → Flask backend → database.</strong>
+  </p>
+
+
+  <h3>3. Decentralized storage compared with centralized object storage</h3>
+
+  <p>
+    Centralized object-storage systems such as CSC Allas or Amazon S3
+    are managed through a centralized cloud service. The provider
+    manages the infrastructure and users normally upload and retrieve
+    objects through the provider's interfaces or APIs.
+  </p>
+
+  <p>
+    A decentralized or cooperative storage system distributes data
+    between multiple participating nodes instead of depending on one
+    centralized storage provider. Systems such as IPFS can use
+    content-based addressing to identify and retrieve data.
+  </p>
+
+  <p>
+    Decentralized storage can provide advantages such as distribution,
+    redundancy and less dependence on a single provider. However, it
+    can also make management more complicated. Availability,
+    performance, privacy, access control, deletion and regulatory
+    requirements may be more difficult to manage.
+  </p>
+
+  <p>
+    Centralized object storage is generally easier to administer and
+    provides predictable APIs and provider support, while decentralized
+    storage can provide greater distribution at the cost of additional
+    operational complexity.
+  </p>
+
+
+  <h3>4. What is YAML and why is it used with Kubernetes?</h3>
+
+  <p>
+    YAML is a human-readable data serialization format. Kubernetes and
+    OpenShift commonly use YAML files to describe resources such as
+    Deployments, Services, ConfigMaps, Secrets and PersistentVolumeClaims.
+  </p>
+
+  <p>
+    YAML is useful for Kubernetes because configuration can be written
+    in a structured form while remaining relatively easy for humans to
+    read. For example, the number of replicas, container image,
+    environment variables and container ports can all be described in
+    one Deployment manifest.
+  </p>
+
+  <p>
+    JSON can represent the same kind of structured information, but it
+    uses braces, brackets and more quotation marks. YAML is usually less
+    visually cluttered, which is useful for large Kubernetes manifests.
+    YAML also supports comments.
+  </p>
+
+  <p>
+    One disadvantage is that indentation is important in YAML. Incorrect
+    indentation can change the structure of a configuration or cause it
+    to fail. During this project I used YAML to configure resources such
+    as Deployments and Services in Rahti.
+  </p>
+
+
+  <!-- ====================================================== -->
+  <!-- PART B -->
+  <!-- ====================================================== -->
+
+  <h2>Part B - Hands-On: Redis Cache Extension</h2>
+
+
+  <h3>1. Objective</h3>
+
+  <p>
+    In Week 4 I deployed a three-container application consisting of an
+    Nginx frontend, a Flask backend and a MySQL database on CSC Rahti.
+    For Week 5 I selected <strong>Option 2: Add a Redis Cache</strong>.
+  </p>
+
+  <p>
+    I added Redis as a separate Deployment and Service. I also created
+    an updated Flask backend that contains the Python Redis client.
+    The backend communicates with Redis using the internal Redis Service
+    on port <code>6379</code>.
+  </p>
+
+  <p>
+    The original frontend, backend and MySQL functionality continues to
+    work while Redis provides an additional cache component.
+  </p>
+
+
+  <h3>2. Updated Architecture</h3>
+
+  <div class="architecture">
+
+    <div class="box">Internet</div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">Rahti Route</div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">Frontend - Nginx</div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">Backend Service</div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">Flask Backend - week-5-git</div>
+
+    <div class="arrow">↓</div>
+
+    <div class="branch">
+
+      <div class="branch-column">
+        <div class="box">MySQL Service</div>
+        <div class="arrow">↓</div>
+        <div class="box">MySQL Pod</div>
+        <div class="arrow">↓</div>
+        <div class="box">PersistentVolumeClaim</div>
+      </div>
+
+      <div class="branch-column">
+        <div class="box">Redis Service :6379</div>
+        <div class="arrow">↓</div>
+        <div class="box">Redis Pod</div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <h3>3. Redis Deployment and Service</h3>
+
+  <p>
+    Redis was deployed as its own Deployment instead of installing Redis
+    inside the Flask container. This follows the same orchestration
+    pattern used for the other application components.
+  </p>
+
+  <p>
+    The Redis Deployment runs a Redis container and exposes port
+    <code>6379</code>. A ClusterIP Service named <code>redis</code>
+    provides an internal network endpoint for the backend.
+  </p>
+
+  <p>
+    Because Kubernetes/OpenShift provides internal DNS for Services, the
+    Flask backend can use the hostname <code>redis</code> instead of
+    depending on the Redis Pod's IP address.
+  </p>
+
+
+  <h3>4. Backend Configuration</h3>
+
+  <p>
+    The Week 4 backend image did not contain the Python Redis library.
+    Therefore, I created a new Week 5 backend image containing Flask,
+    Gunicorn, PyMySQL and the Redis Python client.
+  </p>
+
+  <p>
+    The backend was configured with the following Redis connection
+    information:
+  </p>
+
+  <p>
+    <code>REDIS_HOST=redis</code><br>
+    <code>REDIS_APP_PORT=6379</code>
+  </p>
+
+  <p>
+    The existing database configuration continues to come from the
+    application's ConfigMap and Secret. Database credentials are not
+    stored directly in the application source code.
+  </p>
+
+
+  <h3>5. Redis Integration</h3>
+
+  <p>
+    I added an <code>/api/cache</code> endpoint to the Flask backend.
+    The endpoint first checks Redis for a cached value.
+  </p>
+
+  <p>
+    If the value does not exist, the backend stores
+    <code>Hello from Redis!</code> in Redis with a limited lifetime.
+    When the endpoint is requested again, the value is retrieved from
+    the Redis cache.
+  </p>
+
+  <p>
+    This demonstrates that Redis is not only running as another Pod.
+    The Flask application is actually communicating with it and using
+    it as a cache.
+  </p>
+
+
+  <h3>6. Evidence - Redis Cache Working</h3>
+
+  <p>
+    The following terminal test was executed from the Week 5 Flask
+    backend. The Redis connection returned <code>True</code>.
+    The first API request stored a new value in Redis and the second
+    request retrieved the existing value from the cache.
+  </p>
+
+  <figure>
     <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215353.png"
-        alt="Working application showing database time and visits"
-        width="900"
-    >
+      src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-29%20123940.png"
+      alt="Redis terminal test">
+    <figcaption>
+      Redis connectivity and cache test from the Flask backend.
+    </figcaption>
+  </figure>
 
 
-    <h2>2. Running Pods</h2>
+  <h3>7. Evidence - Original Week 4 Application Still Works</h3>
 
-    <p>
-        The application components are running in Rahti. The backend, database
-        and frontend application Pods are running successfully.
-    </p>
+  <p>
+    After adding Redis and the updated backend, the original application
+    continued to communicate with MySQL. The database time and visit
+    counter demonstrate that the frontend, backend and database flow
+    remains operational.
+  </p>
 
+  <figure>
     <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215402.png"
-        alt="Running Pods in Rahti"
-        width="900"
-    >
+      src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-29%20124402.png"
+      alt="Working frontend webpage">
+    <figcaption>
+      Existing frontend and MySQL functionality still working after the
+      Redis extension.
+    </figcaption>
+  </figure>
 
 
-    <h2>3. Database Persistence</h2>
+  <h3>8. Evidence - Running Pods</h3>
 
-    <p>
-        I tested database persistence by checking the visit counter before
-        recreating a Pod. The application had 6 visits stored in the database.
-    </p>
+  <p>
+    The Pods view shows Redis running as its own Pod together with the
+    Week 5 backend and the existing application components. This proves
+    that Redis was deployed as an orchestrated component rather than
+    being added inside another container.
+  </p>
 
+  <figure>
     <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215417.png"
-        alt="Visit counter before Pod recreation"
-        width="900"
-    >
+      src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-29%20124459.png"
+      alt="Rahti running pods">
+    <figcaption>
+      Rahti Pods showing the Redis and Week 5 backend components.
+    </figcaption>
+  </figure>
 
-    <p>
-        After the Pod was recreated, the application still showed 6 visits.
-        This demonstrates that the application data was not lost when the Pod
-        was recreated and that persistent storage works.
-    </p>
 
+  <h3>9. Evidence - Services</h3>
+
+  <p>
+    Redis also has its own Service. The Redis Service exposes port
+    <code>6379</code> inside the cluster, allowing the Flask backend to
+    communicate with Redis using the Service name.
+  </p>
+
+  <figure>
     <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215440.png"
-        alt="Visit counter after Pod recreation"
-        width="900"
-    >
+      src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-29%20124505.png"
+      alt="Rahti services">
+    <figcaption>
+      Rahti Services showing Redis as a separate internal Service.
+    </figcaption>
+  </figure>
 
 
-    <h2>4. Pod Recovery</h2>
+  <h3>10. Security and Production Readiness</h3>
 
+  <p>
+    The current Redis configuration is suitable for demonstrating the
+    architecture in this course, but a production system would require
+    additional security and reliability measures.
+  </p>
+
+  <p>
+    Redis should normally remain an internal service and should not be
+    exposed directly to the public Internet through a Route. Access
+    should be limited to the application components that require it.
+    NetworkPolicies could also be used to restrict which Pods are
+    allowed to communicate with Redis.
+  </p>
+
+  <p>
+    If Redis authentication credentials were required, they should be
+    stored in a Kubernetes/OpenShift Secret instead of being committed
+    to Git. Production deployments may also require TLS, Redis ACLs,
+    resource limits, monitoring and health checks.
+  </p>
+
+  <p>
+    Reliability is also important. If Redis is used only as a cache,
+    the application should continue operating when cached data is lost.
+    If Redis stores important state, persistence, backups and replication
+    would need to be considered.
+  </p>
+
+
+  <h3>11. Cache Invalidation</h3>
+
+  <p>
+    One important reliability issue with caching is cache invalidation.
+    Cached information can become outdated when the original data
+    changes. An application therefore needs a strategy for deciding
+    when cached data should be removed or refreshed.
+  </p>
+
+  <p>
+    In my demonstration, the cached value is stored with a time limit.
+    This means Redis automatically removes the value after the configured
+    time and the application can create a new cached value later.
+    In a real application, different types of data could require
+    different expiration times.
+  </p>
+
+
+  <h3>12. Connection to Part A</h3>
+
+  <p>
+    The security ideas discussed in Part A also apply to this
+    architecture. A Web Application Firewall could be placed before the
+    public Route to filter malicious web requests before they reach the
+    frontend and backend.
+  </p>
+
+  <p>
+    Redis itself should remain inside the cluster and should not be
+    exposed publicly. ConfigMaps are useful for non-sensitive
+    configuration, while Secrets should be used for passwords and other
+    sensitive values.
+  </p>
+
+  <p>
+    YAML is also directly related to this implementation because Rahti
+    resources such as Deployments and Services can be defined using YAML
+    manifests.
+  </p>
+
+
+  <h3>13. Problems Encountered and Solutions</h3>
+
+  <p>
+    <strong>Problem 1 - Existing backend did not support Redis:</strong><br>
+    The original Week 4 backend image did not contain the Python Redis
+    module. Running a Python import test returned a
+    <code>ModuleNotFoundError</code>.
+  </p>
+
+  <p>
+    <strong>Solution:</strong><br>
+    I created a new Week 5 backend with the Redis Python package included
+    in its requirements. This allowed Flask to communicate with the
+    Redis Service.
+  </p>
+
+
+  <p>
+    <strong>Problem 2 - Gunicorn permission error:</strong><br>
+    The first version of the new backend used Gunicorn 26.2.0. On Rahti
+    it produced a permission error related to
+    <code>/.gunicorn</code>.
+  </p>
+
+  <p>
+    <strong>Solution:</strong><br>
+    I used Gunicorn 23.0.0 for the course backend. After rebuilding the
+    image, Gunicorn started correctly and the Flask application ran on
+    port 8000.
+  </p>
+
+
+  <p>
+    <strong>Problem 3 - Connecting the frontend to the new backend:</strong><br>
+    The existing frontend was originally connected to the Week 4
+    backend through the <code>backend</code> Service.
+  </p>
+
+  <p>
+    <strong>Solution:</strong><br>
+    The backend Service was configured to select the new Week 5 Flask
+    backend. This allowed the existing Nginx configuration to continue
+    using the same backend Service name while the requests were handled
+    by the Redis-capable backend.
+  </p>
+
+
+  <p>
+    <strong>Problem 4 - Backend Route showed 404:</strong><br>
+    Opening the automatically created Week 5 backend Route at its root
+    URL displayed a 404 Not Found page.
+  </p>
+
+  <p>
+    <strong>Solution:</strong><br>
+    This was expected because the Flask backend provides API endpoints
+    rather than a homepage at <code>/</code>. The application's public
+    webpage is provided by the Nginx frontend Route, while Flask handles
+    endpoints such as <code>/api/status</code> and
+    <code>/api/cache</code>.
+  </p>
+
+
+  <h3>14. Final Result</h3>
+
+  <div class="success">
+    The Week 4 three-container application was successfully extended
+    with Redis as a fourth application component. Redis runs as its own
+    Deployment and Service, the Flask backend communicates with it, and
+    the cache functionality was verified by storing and retrieving a
+    value. The original frontend-to-backend-to-MySQL functionality also
+    continues to work.
+  </div>
+
+
+  <h3>15. References</h3>
+
+  <p>
+    Kubernetes Documentation - Deployments, Services, ConfigMaps and Secrets
+  </p>
+
+  <p>
+    Redis Documentation - Redis data store and caching
+  </p>
+
+  <p>
+    Flask Documentation - Python web application framework
+  </p>
+
+  <p>
+    CSC Rahti Documentation - OpenShift container platform
+  </p>
+
+
+  <footer>
     <p>
-        I tested Pod recovery by deleting a running Pod in Rahti. Kubernetes
-        automatically created a replacement Pod. The new Pod reached the
-        Running state, showing that the Deployment maintains the required
-        number of replicas automatically.
+      <strong>Cloud Services Week 5</strong><br>
+      Faisal Sohail
     </p>
-
-    <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215433.png"
-        alt="New Pod automatically created by Kubernetes"
-        width="900"
-    >
-
-
-    <h2>5. Scaling Experiment</h2>
-
-    <p>
-        I tested application scaling by increasing the backend Deployment from
-        one replica to two replicas. Rahti created another backend Pod and both
-        backend Pods reached the Running state. This demonstrates how Kubernetes
-        can scale an application by running multiple replicas.
-    </p>
-
-    <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215518.png"
-        alt="Two backend Pods running after scaling"
-        width="900"
-    >
-
-
-    <h2>6. Application Update</h2>
-
-    <p>
-        The application source code is stored in Git and connected to Rahti.
-        After changes were pushed to the repository, the application was rebuilt
-        and deployed again. Kubernetes used a new Pod for the updated
-        application while the Deployment continued to manage the application.
-        This demonstrates the application update and rollout process.
-    </p>
-
-    <img
-        src="https://a3s.fi/swift/v1/cloud%20service/Screenshot%202026-09-20%20215600.png"
-        alt="Application update and deployment evidence"
-        width="900"
-    >
-
-
-    <h2>7. Problems and Solutions</h2>
-
-    <p>
-        One of the main problems was communication between the frontend and the
-        backend. The frontend initially returned an HTTP 404 API error. I checked
-        the frontend request and Nginx configuration and corrected the proxy
-        configuration so that API requests were forwarded to the backend
-        service correctly.
-    </p>
-
-    <p>
-        I also had to make sure that the backend, database and frontend services
-        were running correctly and that their Kubernetes Services and
-        Deployments were connected using the correct names and ports. After
-        correcting the configuration, the database time and visit counter
-        worked correctly.
-    </p>
-
-
-    <h2>8. Rahti Compared with Docker Compose and cPouta</h2>
-
-    <p>
-        In the previous Docker Compose and cPouta deployment, containers were
-        managed mainly through Docker Compose on a virtual machine. In Rahti,
-        Kubernetes resources such as Deployments, Services, ConfigMaps and
-        persistent storage are used to deploy and manage the application.
-    </p>
-
-    <p>
-        Rahti also provides automatic Pod recovery and easy scaling. When a Pod
-        is deleted, Kubernetes can create a replacement automatically. The
-        number of application replicas can also be changed without manually
-        starting separate containers. Networking is handled through Kubernetes
-        Services, while a Route provides public access to the application.
-    </p>
-
-
-    <h2>9. Screenshot Storage</h2>
-
-    <p>
-        The screenshots used as evidence in this documentation are stored in
-        CSC Allas object storage. The bucket has public access so that the
-        screenshots can be displayed directly on this webpage.
-    </p>
-
-    <img
-        src="https://a3s.fi/swift/v1/cloud%20service/cfb9145f-4883-46d1-abc0-e6ac13be6736.png"
-        alt="Screenshots uploaded to CSC Allas"
-        width="900"
-    >
-
-
-    <h2>10. Git Repository</h2>
-
-    <p>
-        The application and the necessary Kubernetes deployment configuration
-        are stored in GitHub.
-    </p>
-
-    <p>
-        GitHub repository:
-        <a href="https://github.com/Faisal-sohail7/week4" target="_blank">
-            https://github.com/Faisal-sohail7/week4
-        </a>
-    </p>
-
-
-    <script>
-        async function loadStatus() {
-            try {
-                const response = await fetch("/api/status");
-
-                if (!response.ok) {
-                    throw new Error("HTTP " + response.status);
-                }
-
-                const data = await response.json();
-
-                document.getElementById("db-time").textContent = data.db_time;
-                document.getElementById("visits").textContent = data.visits;
-                document.getElementById("error").textContent = "";
-            } catch (error) {
-                document.getElementById("error").textContent =
-                    "API error: " + error;
-            }
-        }
-
-        async function addVisit() {
-            try {
-                const response = await fetch("/api/visit", {
-                    method: "POST"
-                });
-
-                if (!response.ok) {
-                    throw new Error("HTTP " + response.status);
-                }
-
-                await loadStatus();
-            } catch (error) {
-                document.getElementById("error").textContent =
-                    "API error: " + error;
-            }
-        }
-
-        loadStatus();
-    </script>
+  </footer>
 
 </body>
 </html>
