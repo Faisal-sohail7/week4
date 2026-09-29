@@ -1,4 +1,4 @@
 Flask
-gunicorn
+gunicorn==23.0.0
 PyMySQL
 redis
