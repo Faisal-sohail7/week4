@@ -49,7 +49,7 @@ jobs:
 
       - name: Select Rahti project
         run: |
-          oc project cloudservices-week2
+          oc project cloudservice-week2
 
       - name: Deploy new backend image
         run: |
