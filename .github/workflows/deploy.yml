@@ -50,6 +50,9 @@ jobs:
       - name: Select Rahti project
         run: |
           oc project cloudservice-week2
+      - name: Apply backend deployment configuration
+        run: |
+          oc apply -f backend-deployment.yaml    
 
       - name: Deploy new backend image
         run: |

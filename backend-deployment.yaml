@@ -15,6 +15,7 @@ spec:
       containers:
         - name: backend
           image: vikke82/lemp-backend:1.0.2
+
           ports:
             - containerPort: 8000
 
@@ -48,3 +49,21 @@ spec:
 
             - name: REDIS_APP_PORT
               value: "6379"
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
